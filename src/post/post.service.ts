@@ -27,7 +27,6 @@ export class PostService {
             user:{id:post.authorId},
             miscellaneous:post.miscellaneous
         }
-        console.log(logData)
         this.client.emit('create-log',logData)
         return newPost;
     }
@@ -44,7 +43,7 @@ export class PostService {
         const logData = {
             tableId:1,
             rowId:postId.id,
-            action:"updated the post",
+            action:"updated the content of the post",
             oldData:oldPost,
             newData:updatedPost,
             ipAddress:post.ipAddress,

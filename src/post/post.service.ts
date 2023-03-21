@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -12,6 +12,7 @@ export class PostService {
       ) {} 
 
     async createPost(post){
+       try{
         const newPost = new this.postModel({
             content:post.content,
             authorId:post.authorId
@@ -29,11 +30,23 @@ export class PostService {
         }
         this.client.emit('create-log',logData)
         return newPost;
+       }catch(error){
+        throw new HttpException(
+            'Failed to create post',
+            HttpStatus.INTERNAL_SERVER_ERROR,
+          );
+       }
     }
 
     async updatePost(post,postId){
-        console.log(post,postId)
-     const oldPost=await this.postModel.findById(postId.id);
+     try {
+        const oldPost=await this.postModel.findById(postId.id);
+        if(!oldPost){
+            throw new HttpException(
+                'Post Not found',
+                HttpStatus.BAD_REQUEST,
+              );
+        }
      const updatedPost = await this.postModel.findOneAndUpdate(
         postId,{
             content:post.content
@@ -52,5 +65,11 @@ export class PostService {
         }
         this.client.emit('create-log',logData) 
      return updatedPost;
+     } catch (error) {
+        throw new HttpException(
+            'Failed to update post',
+            HttpStatus.INTERNAL_SERVER_ERROR,
+          );
+     }
     }
 }

@@ -40,22 +40,21 @@ export class PostService {
 
     async updatePost(post,postId){
      try {
-        const oldPost=await this.postModel.findById(postId.id);
+        const oldPost=await this.postModel.findById(postId);
         if(!oldPost){
             throw new HttpException(
                 'Post Not found',
                 HttpStatus.BAD_REQUEST,
               );
         }
-     const updatedPost = await this.postModel.findOneAndUpdate(
-        postId,{
+     const updatedPost = await this.postModel.findByIdAndUpdate(
+        {_id:postId},{
             content:post.content
         },
-        {new:true}
-        ) 
+        {new:true}) 
         const logData = {
             tableId:1,
-            rowId:postId.id,
+            rowId:postId,
             action:"updated the content of the post",
             oldData:oldPost,
             newData:updatedPost,

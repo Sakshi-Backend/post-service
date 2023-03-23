@@ -25,8 +25,8 @@ export class PostController {
    * @param postId 
    * @returns updated post
    */
-  @Patch()
-  async updatePost(@Body() post,@Query() postId){
+  @Patch('/:postId')
+  async updatePost(@Body() post,@Param('postId') postId){
    try {
     return this.postService.updatePost(post,postId);
    } catch (error) {

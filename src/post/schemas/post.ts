@@ -9,7 +9,7 @@ export class Post{
      content:string;
      
      @Prop({required:true})
-     authorId:number;
+     authorId:string;
      
      @Prop()
      createdAt:Date;

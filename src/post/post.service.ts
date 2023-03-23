@@ -25,7 +25,7 @@ export class PostService {
             oldData:{},
             newData:newPost,
             ipAddress:post.ipAddress,
-            user:{id:post.authorId},
+            userId:post.authorId,
             miscellaneous:post.miscellaneous
         }
         this.client.emit('create-log',logData)
@@ -59,7 +59,7 @@ export class PostService {
             oldData:oldPost,
             newData:updatedPost,
             ipAddress:post.ipAddress,
-            user:{id:post.authorId},
+            userId:post.authorId,
             miscellaneous:post.miscellaneous
         }
         this.client.emit('create-log',logData) 

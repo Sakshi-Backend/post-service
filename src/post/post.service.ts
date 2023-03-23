@@ -11,11 +11,11 @@ export class PostService {
         @Inject('MATH_SERVICE') private readonly client: ClientProxy,
       ) {} 
 
-    async createPost(post){
+    async createPost(post,req){
        try{
         const newPost = new this.postModel({
             content:post.content,
-            authorId:post.authorId
+            authorId:req.headers.authorid
         });
         await newPost.save();
         const logData = {
@@ -24,9 +24,9 @@ export class PostService {
             action:"created new post",
             oldData:{},
             newData:newPost,
-            ipAddress:post.ipAddress,
+            ipAddress:req.ip,
             userId:post.authorId,
-            miscellaneous:post.miscellaneous
+            miscellaneous:{platform:req.headers.platform,os:req.headers.os}
         }
         this.client.emit('create-log',logData)
         return newPost;
@@ -38,7 +38,7 @@ export class PostService {
        }
     }
 
-    async updatePost(post,postId){
+    async updatePost(post,postId,req){
      try {
         const oldPost=await this.postModel.findById(postId);
         if(!oldPost){
@@ -58,9 +58,9 @@ export class PostService {
             action:"updated the content of the post",
             oldData:oldPost,
             newData:updatedPost,
-            ipAddress:post.ipAddress,
-            userId:post.authorId,
-            miscellaneous:post.miscellaneous
+            ipAddress:req.ip,
+            userId:req.headers.authorid,
+            miscellaneous:{platform:req.headers.platform,os:req.headers.os}
         }
         this.client.emit('create-log',logData) 
      return updatedPost;
